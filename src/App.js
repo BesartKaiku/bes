@@ -1,23 +1,41 @@
-import logo from './logo.svg';
-import './App.css';
+import Axios from 'axios';
+import Home from './compontents/Home.js';
+import React from 'react';
+import {useState, useEffect} from 'react';
+import Product from './compontents/Product.js';
+import OK from './compontents/OK.js';
+import HeaderExampleContent from './compontents/SemanticButton.js';
 
-function App() {
+
+function App() { 
+ 
+  const [todos,setTodos] = useState();
+  useEffect(()=>{
+    Axios.get("http://192.168.1.181:1337/cars").then((res)=>{
+    const responseTodos = res.data.cars;
+    console.log(res.data.cars);
+    setTodos(responseTodos);
+  })
+  },[]);
+  
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+    <div>
+      
+      { todos && todos.map(todo => {
+      const { id, make, year, model } = todo;
+      return(
+        <div>
+        <ul> 
+
+        <Product make={make} year={year} model={model} key={id}/>
+        
+        </ul>
+
+        </div>
+      
+      )}) }
+      <Home />
+      <OK/>
     </div>
   );
 }
